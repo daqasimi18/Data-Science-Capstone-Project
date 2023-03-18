@@ -1,4 +1,3 @@
-#https://data-flair.training/blogs/credit-card-fraud-detection-python-machine-learning/
 # Necessary libraries and modules
 import numpy as np
 import pandas as pd
@@ -126,39 +125,3 @@ print("Evaluation of Decision Tree Model")
 metrics(test_output_attributes, decision_trees_predictions.round())
 print("Evaluation of Random Forest Model")
 metrics(test_output_attributes, random_forest_decisions.round())
-
-
-# There is a huge imbalance in the dataset between fraudulent and non fraudulent 
-# transactions. With such imbalance often comes predictions that favor one
-# transaction more than the other, with importance given to genuine transactions.
-# In the following lines oversampling method is used to address the imbalance 
-# dataset. In this project the minority class is doubled by generating and replicating 
-# existing ones. The Synthetic Minority Oversampling Technique (SMOTE) method is data
-# augmentation that's used for solving the imbalance problem.
-"""
-resampled_x, resampled_y = SMOTE().fit_resample(input_attributes, output_attributes)
-print("Resampled shape of input_attributes: ", resampled_x.shape)
-print("Resampled shape of output_attributes: ", resampled_y.shape)
-
-value_counts = Counter(resampled_y)
-print(value_counts)
-(train_input_attributes, test_input_attributes, train_output_attributes, test_output_attributes) = train_test_split(resampled_x, resampled_y, test_size= 0.3, random_state= 42)
-
-# Build the Random Forest classifier on the new dataset
-resample_random_forest = RandomForestClassifier(n_estimators = 100)
-resample_random_forest.fit(train_input_attributes, train_output_attributes)
-with open("random_forest_model", "rb") as rf:
-    random_forest_mod = pickle.load(rf)
-resampled_predictions = resample_random_forest.predict(test_input_attributes)
-resampled_random_forest_score = resample_random_forest.score(test_input_attributes, test_output_attributes) * 100
-
-# Visualize the confusion matrix
-cm_resampled = confusion_matrix(test_output_attributes, y_predict.round())
-print("Confusion Matrix - Random Forest")
-print(cm_resampled)
-plot_confusion_matrix(cm_resampled, classes=[0, 1], title= "Confusion Matrix - Random Forest After Oversampling")
-
-print("Evaluation of Random Forest Model")
-print()
-metrics(test_output_attributes, resampled_predictions.round())
-"""
