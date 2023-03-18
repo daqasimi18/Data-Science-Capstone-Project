@@ -10,28 +10,28 @@ The following steps are taken for writing the credit card fraud detection softwa
 * The result of each classifier is evaluated during the training phase so that the best one can be selected based on its precision. 
 * The accuracy of each classifier is detected, and the higher-accuracy algorithm is allowed to print the final result.
 * The following is an example of how the output of fraudDetection.py should look like as of March 18, 2023
-<br /> Number of Genuine transactions:  284315
-<br /> Number of Fraud transactions:  492
-<br /> Percentage of Fraud transactions: 0.1727
-<br /> Shape of train_input_attributes:  (199364, 29)
-<br /> Shape of test_input_attributes:  (85443, 29)
-<br /> Random Forest Score:  99.95786664794073
-<br /> Decision Tree Score:  99.93328885923948
-<br /> Confusion Matrix - Decision Tree
-<br /> [[85276    31]
-<br />  [   26   110]]
-<br /> Confusion matrix, without normalization
-<br /> Confusion Matrix - Random Forest
-<br /> [[85298     9]
-<br />  [   27   109]]
-<br /> Confusion matrix, without normalization
-<br /> Evaluation of Decision Tree Model
-<br /> Accuracy: 0.99933
-<br /> Precision: 0.78014
-<br /> Recall: 0.80882
-<br /> F1-score: 0.79422
-<br /> Evaluation of Random Forest Model
-<br /> Accuracy: 0.99958
-<br /> Precision: 0.92373
-<br /> Recall: 0.80147
-<br /> F1-score: 0.85827
+<br />    Number of Genuine transactions:  284315
+<br />    Number of Fraud transactions:  492
+<br />    Percentage of Fraud transactions: 0.1727
+<br />    Shape of train_input_attributes:  (199364, 29)
+<br />    Shape of test_input_attributes:  (85443, 29)
+<br />    Random Forest Score:  99.95786664794073
+<br />    Decision Tree Score:  99.93328885923948
+<br />    Confusion Matrix - Decision Tree
+<br />    [[85276    31]
+<br />     [   26   110]]
+<br />    Confusion matrix, without normalization
+<br />    Confusion Matrix - Random Forest
+<br />    [[85298     9]
+<br />     [   27   109]]
+<br />    Confusion matrix, without normalization
+<br />    Evaluation of Decision Tree Model
+<br />    Accuracy: 0.99933
+<br />    Precision: 0.78014
+<br />    Recall: 0.80882
+<br />    F1-score: 0.79422
+<br />    Evaluation of Random Forest Model
+<br />    Accuracy: 0.99958
+<br />    Precision: 0.92373
+<br />    Recall: 0.80147
+<br />    F1-score: 0.85827
