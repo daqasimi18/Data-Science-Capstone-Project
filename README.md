@@ -39,7 +39,6 @@ The following steps are taken for writing the credit card fraud detection softwa
 <br />    Resampled shape of output_attributes:  (568630,)
 <br />    Counter({0: 284315, 1: 284315})
 <br />    Evaluation of Random Forest Model
-
 <br />    Accuracy: 0.99987
 <br />    Precision: 0.99975
 <br />    Recall: 0.99999
