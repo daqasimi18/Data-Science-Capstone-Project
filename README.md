@@ -35,3 +35,12 @@ The following steps are taken for writing the credit card fraud detection softwa
 <br />    Precision: 0.92373
 <br />    Recall: 0.80147
 <br />    F1-score: 0.85827
+<br />    Resampled shape of input_attributes:  (568630, 29)
+<br />    Resampled shape of output_attributes:  (568630,)
+<br />    Counter({0: 284315, 1: 284315})
+<br />    Evaluation of Random Forest Model
+
+<br />    Accuracy: 0.99987
+<br />    Precision: 0.99975
+<br />    Recall: 0.99999
+<br />    F1-score: 0.99987
