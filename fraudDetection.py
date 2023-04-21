@@ -1,6 +1,8 @@
+#https://data-flair.training/blogs/credit-card-fraud-detection-python-machine-learning/
 # Necessary libraries and modules
 import numpy as np
 import pandas as pd
+import os.path
 import pickle
 import matplotlib.pyplot as plt
 from collections import Counter
@@ -22,11 +24,10 @@ datastructure.isnull().values.any()
 # If the class column is 1, it represents fraud
 non_fraud = len(datastructure[datastructure.Class == 0])
 fraud = len(datastructure[datastructure.Class == 1])
-
 # Percentage of fraud from 284,807 transactions
 fraud_percent = (fraud / (fraud + non_fraud)) * 100
-print("Number of Genuine transactions: ", non_fraud)
-print("Number of Fraud transactions: ", fraud)
+print("Number of genuine transactions: ", non_fraud)
+print("Number of fraud transactions: ", fraud)
 print("Percentage of Fraud transactions: {:.4f}".format(fraud_percent))
 
 # Scale the data in the dataset. Drop the Amount and Time variables. 
@@ -53,26 +54,40 @@ print("Shape of test_input_attributes: ", test_input_attributes.shape)
 # are trained using the fit() function and recorded the predictions of the 
 # model using predict() fuction. Each model may have different scores.
 # Decision Tree
-decision_tree = DecisionTreeClassifier()
-decision_tree.fit(train_input_attributes, train_output_attributes)
-# Save Decision Tree's model
-with open("decision_tree_model", "wb") as dt:
-    pickle.dump(decision_tree, dt)
-with open("decision_tree_model", "rb") as dt:
-    decision_tree_mod = pickle.load(dt)
-decision_trees_predictions = decision_tree.predict(test_input_attributes)
-decision_tree_score = decision_tree.score(test_input_attributes, test_output_attributes) * 100
+if os.path.isfile("./decision_tree_model") == True:
+    decision_tree = DecisionTreeClassifier()
+    with open("decision_tree_model", "rb") as dt:
+        decision_tree_mod = pickle.load(dt)
+    decision_trees_predictions = decision_tree_mod.predict(test_input_attributes)
+    decision_tree_score = decision_tree_mod.score(test_input_attributes, test_output_attributes) * 100
+else:
+    decision_tree = DecisionTreeClassifier()
+    decision_tree.fit(train_input_attributes, train_output_attributes)
+    # Save Decision Tree's model
+    with open("decision_tree_model", "wb") as dt:
+        pickle.dump(decision_tree, dt)
+    with open("decision_tree_model", "rb") as dt:
+        decision_tree_mod = pickle.load(dt)
+    decision_trees_predictions = decision_tree.predict(test_input_attributes)
+    decision_tree_score = decision_tree.score(test_input_attributes, test_output_attributes) * 100
 
 # Random Forest
-random_forest = RandomForestClassifier(n_estimators= 100)
-random_forest.fit(train_input_attributes, train_output_attributes)
-# Save Random Forest's model
-with open("random_forest_model", "wb") as rf:
-    pickle.dump(random_forest, rf)
-with open("random_forest_model", "rb") as rf:
-    random_forest_mod = pickle.load(rf)
-random_forest_decisions = random_forest.predict(test_input_attributes)
-random_forest_score = random_forest.score(test_input_attributes, test_output_attributes) * 100
+if os.path.isfile("./random_forest_model") == True:
+    random_forest = RandomForestClassifier(n_estimators= 100)
+    with open("random_forest_model", "rb") as rf:
+        random_forest_mod = pickle.load(rf)
+    random_forest_decisions = random_forest_mod.predict(test_input_attributes)
+    random_forest_score = random_forest_mod.score(test_input_attributes, test_output_attributes) * 100
+else:
+    random_forest = RandomForestClassifier(n_estimators= 100)
+    random_forest.fit(train_input_attributes, train_output_attributes)
+    # Save Random Forest's model
+    with open("random_forest_model", "wb") as rf:
+        pickle.dump(random_forest, rf)
+    with open("random_forest_model", "rb") as rf:
+        random_forest_mod = pickle.load(rf)
+    random_forest_decisions = random_forest.predict(test_input_attributes)
+    random_forest_score = random_forest.score(test_input_attributes, test_output_attributes) * 100
 
 # Scores of each classifiers and models
 print("Random Forest Score: ", random_forest_score)
@@ -125,3 +140,45 @@ print("Evaluation of Decision Tree Model")
 metrics(test_output_attributes, decision_trees_predictions.round())
 print("Evaluation of Random Forest Model")
 metrics(test_output_attributes, random_forest_decisions.round())
+
+# There is a huge imbalance in the dataset between fraudulent and non fraudulent 
+# transactions. With such imbalance often comes predictions that favor one
+# transaction more than the other, with importance given to genuine transactions.
+# In the following lines oversampling method is used to address the imbalance 
+# dataset. In this project the minority class is doubled by generating and replicating 
+# existing ones. The Synthetic Minority Oversampling Technique (SMOTE) method is data
+# augmentation that's used for solving the imbalance problem.
+resampled_x, resampled_y = SMOTE().fit_resample(input_attributes, output_attributes)
+print("Resampled shape of input_attributes: ", resampled_x.shape)
+print("Resampled shape of output_attributes: ", resampled_y.shape)
+
+value_counts = Counter(resampled_y)
+print(value_counts)
+(train_input_attributes, test_input_attributes, train_output_attributes, test_output_attributes) = train_test_split(resampled_x, resampled_y, test_size= 0.3, random_state= 42)
+
+if os.path.isfile("./resampled_random_forest_model") == True:
+    resample_random_forest = RandomForestClassifier(n_estimators = 100)
+    with open("resampled_random_forest_model", "rb") as rf:
+        resampled_random_forest_mod = pickle.load(rf)
+    resampled_predictions = resampled_random_forest_mod.predict(test_input_attributes)
+    resampled_random_forest_score = resampled_random_forest_mod.score(test_input_attributes, test_output_attributes) * 100
+else:   
+    # Build the Random Forest classifier on the new dataset
+    resample_random_forest = RandomForestClassifier(n_estimators = 100)
+    resample_random_forest.fit(train_input_attributes, train_output_attributes)
+    with open("resampled_random_forest_model", "wb") as rf:
+        pickle.dump(resample_random_forest, rf)
+    with open("resampled_random_forest_model", "rb") as rf:
+        resampled_random_forest_mod = pickle.load(rf)
+    resampled_predictions = resampled_random_forest_mod.predict(test_input_attributes)
+    resampled_random_forest_score = resampled_random_forest_mod.score(test_input_attributes, test_output_attributes) * 100
+
+# Visualize the confusion matrix
+#cm_resampled = confusion_matrix(test_output_attributes, y_predict.round())
+#print("Confusion Matrix - Random Forest")
+#print(cm_resampled)
+#plot_confusion_matrix(cm_resampled, classes=[0, 1], title= "Confusion Matrix - Random Forest After Oversampling")
+
+print("Evaluation of Random Forest Model")
+print()
+metrics(test_output_attributes, resampled_predictions.round())
